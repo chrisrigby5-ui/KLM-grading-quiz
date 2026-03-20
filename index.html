@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KLM Grading Quiz</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        text-align: center;
+        padding: 40px;
+    }
+    .quiz-box {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        border: none;
+        background: #007BFF;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 80%;
+    }
+    button:hover {
+        background: #0056b3;
+    }
+    .correct { color: green; font-weight: bold; }
+    .wrong { color: red; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="quiz-box">
+    <h2 id="question">Loading...</h2>
+    <div id="answers"></div>
+    <p id="feedback"></p>
+    <p>Score: <span id="score">0</span></p>
+</div>
+
+<script>
+
+// SAMPLE QUESTIONS (add more to reach 100+)
+const questions = [
+    {
+        q: "What is the purpose of override grading?",
+        options: ["Remove defects", "Allow minor defects", "Only perfect timber", "Increase waste"],
+        answer: 1
+    },
+    {
+        q: "How much pith is allowed?",
+        options: ["None", "Limited", "Any amount", "Edges only"],
+        answer: 2
+    },
+    {
+        q: "Max wane allowed?",
+        options: ["½ face", "¼ face & ¼ edge", "Full edge", "None"],
+        answer: 1
+    },
+    {
+        q: "Are insect damage and decay allowed?",
+        options: ["Yes", "Sometimes", "No", "Small only"],
+        answer: 2
+    },
+    {
+        q: "Max hole size?",
+        options: ["10mm", "25mm", "50mm", "Not allowed"],
+        answer: 1
+    },
+    {
+        q: "What is an edge knot?",
+        options: ["Centre", "Touches edge", "Near edge", "Anywhere"],
+        answer: 1
+    },
+    {
+        q: "Skip max on face?",
+        options: ["25%", "50%", "75%", "100%"],
+        answer: 1
+    },
+    {
+        q: "Stud recovery minimum?",
+        options: ["25%", "40%", "50%", "75%"],
+        answer: 2
+    },
+    {
+        q: "90x size spike/edge limit?",
+        options: ["30mm", "36mm", "50mm", "59mm"],
+        answer: 1
+    },
+    {
+        q: "What must remain intact?",
+        options: ["Grain", "Arris", "Colour", "Bark"],
+        answer: 1
+    }
+];
+
+// Duplicate questions to simulate ~100 (quick way)
+while (questions.length < 100) {
+    questions.push(...questions.slice(0, 10));
+}
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+    const q = questions[current];
+    document.getElementById("question").innerText = `Q${current + 1}: ${q.q}`;
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+    document.getElementById("feedback").innerText = "";
+
+    q.options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(index);
+        answersDiv.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected) {
+    const correct = questions[current].answer;
+    const feedback = document.getElementById("feedback");
+
+    if (selected === correct) {
+        feedback.innerHTML = "✅ Correct";
+        feedback.className = "correct";
+        score++;
+    } else {
+        feedback.innerHTML = "❌ Incorrect";
+        feedback.className = "wrong";
+    }
+
+    document.getElementById("score").innerText = score;
+
+    setTimeout(() => {
+        current++;
+        if (current >= questions.length) {
+            alert(`Quiz complete! Score: ${score}/${questions.length}`);
+            current = 0;
+            score = 0;
+        }
+        loadQuestion();
+    }, 1000);
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
